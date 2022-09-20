@@ -1,5 +1,5 @@
 function [KG,Fext] = assemblyKG(dim,Td,Kel,Fe)
-
+% Testing commit on changes
 KG = zeros(dim.ndof,dim.ndof);
 Fext = zeros(dim.ndof,1);
 
