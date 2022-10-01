@@ -50,7 +50,7 @@ N = size(beamDiv,1); % number of section elements
 l = l_parameter(L,L1,M,Me,g);
 
 % Open figure window
-fig = plotBeams(L);
+%fig = plotBeams(L);
 
 %% SOLVER
 
