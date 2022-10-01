@@ -23,8 +23,8 @@ function [u,R,vl,vr,ur] = solveSystem(dim,KG,Fext,fixNod)
     s.LHS = KLL;
     s.RHS = FL - KLR*ur;
 
-    %s.solver_type = 'Direct';
-    s.solver_type = 'Iterative';
+    s.solver_type = 'Direct';
+    %s.solver_type = 'Iterative';
 
     Solv = Solver.create(s);
     Solv.solve();

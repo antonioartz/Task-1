@@ -2,7 +2,8 @@ classdef DirectSolver < Solver
 
     methods (Access = public)
         function solve(obj)
-            obj.x = obj.LHS\obj.RHS;
+            %obj.x = obj.LHS\obj.RHS;
+            obj.x = inv(obj.LHS)*obj.RHS;
         end
     end
     methods(Access = public)

@@ -6,9 +6,9 @@ fig = figure('units','centimeters','Position',[6,6,20,20]);
 subplot(2,2,1)
 hold on
 xlim([0,L/2]);
-xlabel('x [m]');
-ylabel('u_y [m]');
-title('Deflection');
+xlabel('$x$ [m]','Interpreter','latex');
+ylabel('$u_y$ [m]','Interpreter','latex');
+title('\textbf{Deflection}','Interpreter','latex');
 box on;
 grid on;
 
@@ -16,9 +16,9 @@ grid on;
 subplot(2,2,2)
 hold on
 xlim([0,L/2]);
-xlabel('x [m]');
-ylabel('\theta_z [rad]');
-title('Rotation');
+xlabel('$x$ [m]','Interpreter','latex');
+ylabel('$\theta_z$ [rad]','Interpreter','latex');
+title('\textbf{Rotation}','Interpreter','latex');
 box on;
 grid on;
 
@@ -26,9 +26,9 @@ grid on;
 subplot(2,2,3)
 hold on
 xlim([0,L/2]);
-xlabel('x [m]');
-ylabel('F_y [N]');
-title('Shear force');
+xlabel('$x$ [m]','Interpreter','latex');
+ylabel('$F_y$ [N]','Interpreter','latex');
+title('\textbf{Shear force}','Interpreter','latex');
 box on;
 grid on;
 
@@ -36,9 +36,9 @@ grid on;
 subplot(2,2,4)
 hold on
 xlim([0,L/2]);
-xlabel('x [m]');
-ylabel('M_z [Nm]');
-title('Bending moment');
+xlabel('$x$ [m]','Interpreter','latex');
+ylabel('$M_z$ [Nm]','Interpreter','latex');
+title('\textbf{Bending moment}','Interpreter','latex');
 box on;
 grid on;
 

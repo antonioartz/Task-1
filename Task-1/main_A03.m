@@ -1,7 +1,7 @@
 %-----------------------------------%
 %                                   %
 %  ASSIGNMENT_03A                   %
-%  Antonio Aristizábal Fernández    %
+%  Antonio Aristizï¿½bal Fernï¿½ndez    %
 %                                   %
 %-----------------------------------%
 
@@ -11,6 +11,7 @@ clc;
 
 %% INPUT DATA
 
+delta = 1e-06;
 g = 9.81;           % m/s^2
 
 % BEAM GEOMETRY
@@ -53,8 +54,8 @@ fig = plotBeams(L);
 
 %% SOLVER
 
-N_discr = [9, 18, 36, 72, 144, 288]';  % number of discretizations
-%N_discr = 9;
+%N_discr = [9, 18, 36, 72, 144, 288]';  % number of discretizations
+N_discr = 9;
 
 for p = 1:length(N_discr)
     
@@ -114,14 +115,28 @@ Kel = stiffnessBars(dim,x_nod,Tn,mat,Tmat);
 Fe = Fext_vector(dim,x_nod,Tn,L1,L2,l,g,Me,M,L);
 
 % Global matrix assembly
+
+load('stiffMatrix.mat','KG','Fext');
+KG_old = KG;
+Fext_old = Fext;
+
 [KG,Fext] = assemblyKG(dim,Td,Kel,Fe);
+% save('stiffMatrix','KG','Fext');
+[KG] = stiffnessMatrixTest(KG,KG_old,delta);
+[Fext] = forceVectorTest(Fext,Fext_old,delta);
+
 
 % Global system of equations
+load('displacements.mat','u');
+u_old = u;
+
 [u,R,vl,vr,ur] = solveSystem(dim,KG,Fext,fixNod);
+[u] = displacementsTest(u,u_old,delta);
+% save('displacements','u');
 
 % Inertial forces Bennding moment
 [Fy,Mz,Puy,Ptz] = shear_bend(dim,x_nod,Tn,Td,Kel,u);
-
+%{
 %% PLOT RESULTS
 
 N_elem = N_discr(p,1);
@@ -136,3 +151,5 @@ figure(fig)
 legend(strcat('N=',cellstr(string(N_discr))),'location','northeast');
 
 plotMax_U_Mz(max_u,max_Mz,N_discr);
+%}
+end
