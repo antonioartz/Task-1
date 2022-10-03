@@ -6,9 +6,7 @@ den_xcdm = 0;       % this value will be updated
 num_ycdm = 0;       % this value will be updated
 den_ycdm = 0;       % this value will be updated
 
-
-    area(:,1) = beamDiv(:,3).*beamDiv(:,4);
-
+area(:,1) = beamDiv(:,3).*beamDiv(:,4);
 
 for i = 1:N
    num_xcdm = num_xcdm + (area(i,1)*beamDiv(i,1));
@@ -24,7 +22,6 @@ y_cdm = num_ycdm/den_ycdm;
 % Inertia
 Ixx = 0;            % this value will be updated
 Iyy = 0;            % this value will be updated
-
 
 for i = 1:N
    Ix(i,1) = area(i,1)*(y_cdm - beamDiv(i,2))^2 + (1/12)*elem_dim(i,1)*elem_dim(i,2)^3;
