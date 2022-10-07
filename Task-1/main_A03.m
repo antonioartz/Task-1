@@ -11,22 +11,26 @@ clc;
 
 %% INPUT DATA
 
-delta = 1e-06;
-g = 9.81;           % m/s^2
+s.tolerance = 1e-06;
+s.g = 9.81;           % m/s^2
 
 % BEAM GEOMETRY
-b = 100e-3;         % m
-a = 10e-3;          % m
-h = 500e-3;         % m
-t = 5e-3;           % m
+s.b = 100e-3;         % m
+s.a = 10e-3;          % m
+s.h = 500e-3;         % m
+s.t = 5e-3;           % m
 
-L = 36;             % m
-L1 = 4;             % m
-L2 = 12;            % m
-M = 55000;          % kg
-Me = 3000;          % kg
-E = 45e9;           % Pa
+s.L = 36;             % m
+s.L1 = 4;             % m
+s.L2 = 12;            % m
+s.M = 55000;          % kg
+s.Me = 3000;          % kg
+s.E = 45e9;           % Pa
+s.desiredTest = 'stiffnessMatrixTest';
+% s.desiredTest = 'forceVectorTest';
+% s.desiredTest = 'displacementsTest';
 
+Test = TestComputer(s);
 %% PREVIOUS CALCULATIONS
 
 % mass center and inertia
