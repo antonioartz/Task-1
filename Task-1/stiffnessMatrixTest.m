@@ -1,17 +1,26 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-%
-%   Stiffness matrix test
-%
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+classdef StiffnessMatrixTest < TestComputer
 
-function [KG] = stiffnessMatrixTest(KG,KG_old,delta)
+    properties (Access = public)
+        loadedData
+        actualData
+    end
 
-error = max(max(abs(KG - KG_old)));
+    methods (Access = private)
+        function loadData(obj)
+            load('stiffMatrix.mat','KG');
+            obj.loadedData = KG;
+        end
+        function storeActualData(obj)
+            obj.actualData = obj.KG;
+        end
+    end
 
-if error < delta
-    disp('Stiffness matrix test passed successfully');
-else
-    error('Stiffness matrices do not coincide');
+    methods(Access = public)
+        function obj = StiffnessMatrixTest(cParams)
+            obj.init(cParams);
+            obj.initParams(cParams);
+            obj.loadData();
+            obj.storeActualData();
+        end
+    end
 end

@@ -1,17 +1,26 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-%
-%   Force vector test
-%
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+classdef ForceVectorTest < TestComputer
 
-function [Fext] = forceVectorTest(Fext,Fext_old,delta)
+    properties (Access = public)
+        loadedData
+        actualData
+    end
 
-error = max(max(abs(Fext - Fext_old)));
+    methods (Access = private)
+        function loadData(obj)
+            load('stiffMatrix.mat','Fext');
+            obj.loadedData = Fext;
+        end
+        function storeActualData(obj)
+            obj.actualData = obj.Fext;
+        end
+    end
 
-if error < delta
-    disp('Force vector test passed successfully');
-else
-    error('Force vectors do not coincide');
+    methods(Access = public)
+        function obj = ForceVectorTest(cParams)
+            obj.init(cParams);
+            obj.initParams(cParams);
+            obj.loadData();
+            obj.storeActualData();
+        end
+    end
 end

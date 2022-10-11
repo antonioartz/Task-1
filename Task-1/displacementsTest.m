@@ -1,17 +1,26 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-%
-%   Displacements test
-%
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+classdef DisplacementsTest < TestComputer
 
-function [u] = displacementsTest(u,u_old,delta)
+    properties (Access = public)
+        loadedData
+        actualData
+    end
 
-error = max(max(abs(u - u_old)));
+    methods (Access = private)
+        function loadData(obj)
+            load('displacements.mat','u');
+            obj.loadedData = u;
+        end
+        function storeActualData(obj)
+            obj.actualData = obj.u;
+        end
+    end
 
-if error < delta
-    disp('Displacements test passed successfully');
-else
-    error('Displacements vectors do not coincide');
+    methods(Access = public)
+        function obj = DisplacementsTest(cParams)
+            obj.init(cParams);
+            obj.initParams(cParams);
+            obj.loadData();
+            obj.storeActualData();
+        end
+    end
 end

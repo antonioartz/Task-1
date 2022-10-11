@@ -30,5 +30,4 @@ classdef Solver < handle
             obj.RHS = cParams.RHS;
         end
     end
-
 end
