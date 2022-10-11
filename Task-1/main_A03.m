@@ -26,11 +26,15 @@ s.L2 = 12;            % m
 s.M = 55000;          % kg
 s.Me = 3000;          % kg
 s.E = 45e9;           % Pa
-s.desiredTest = 'stiffnessMatrixTest';
-% s.desiredTest = 'forceVectorTest';
-% s.desiredTest = 'displacementsTest';
 
-Test = TestComputer(s);
+s.tolerance = 1e-06;
+s.desiredTest = 'StiffnessMatrix';
+%s.desiredTest = 'ForceVector';
+%s.desiredTest = 'Displacements';
+Test = TestComputer.testSelector(s);
+Test.check();
+
+%{
 %% PREVIOUS CALCULATIONS
 
 % mass center and inertia
@@ -157,3 +161,4 @@ legend(strcat('N=',cellstr(string(N_discr))),'location','northeast');
 plotMax_U_Mz(max_u,max_Mz,N_discr);
 %}
 end
+%}

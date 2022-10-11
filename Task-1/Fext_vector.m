@@ -1,4 +1,4 @@
-function Fe = Fext_vector(dim,x_nod,Tn,L1,L2,l,g,Me,M,L)
+function Fe = Fext_vector(dim,x_nod,Tn,s,l)
 
     for e = 1:dim.nel
    
@@ -9,17 +9,17 @@ function Fe = Fext_vector(dim,x_nod,Tn,L1,L2,l,g,Me,M,L)
     
     x_m = (x2 + x1)/2;
     
-        if x2 <= L1/2 
+        if x2 <= s.L1/2 
         
-            q = l*(0.85 - 0.15*cos(2*pi*x_m/L1)) - g*(27/5)*M/L;
+            q = l*(0.85 - 0.15*cos(2*pi*x_m/s.L1)) - s.g*(27/5)*s.M/s.L;
             
-        elseif (x_m > (L1/2 - le/2)) && (x_m < (L1/2 + le/2))
+        elseif (x_m > (s.L1/2 - le/2)) && (x_m < (s.L1/2 + le/2))
             
-            q = l*(0.85 - 0.15*cos(2*pi*x_m/L1)) - g*(27/5)*M/L;
+            q = l*(0.85 - 0.15*cos(2*pi*x_m/s.L1)) - s.g*(27/5)*s.M/s.L;
             
         else
         
-            q = l*((L^2 - 4*(x_m^2))/(L^2 - L1^2)) - g*(9/20)*M/L;
+            q = l*((s.L^2 - 4*(x_m^2))/(s.L^2 - s.L1^2)) - s.g*(9/20)*s.M/s.L;
     
         end
        
@@ -38,18 +38,18 @@ function Fe = Fext_vector(dim,x_nod,Tn,L1,L2,l,g,Me,M,L)
         
     Fe(:,e) = Rp*Fep;
             
-        if x2 == L2/2
+        if x2 == s.L2/2
             
-            Fe(3,e) = Fe(3,e) - Me*g/2;
+            Fe(3,e) = Fe(3,e) - s.Me*s.g/2;
             
-        elseif x1 == L2/2
+        elseif x1 == s.L2/2
             
-            Fe(1,e) = Fe(1,e) - Me*g/2;
+            Fe(1,e) = Fe(1,e) - s.Me*s.g/2;
             
-        elseif (x_m > (L2/2 - le/2)) && (x_m < (L2/2 + le/2))
+        elseif (x_m > (s.L2/2 - le/2)) && (x_m < (s.L2/2 + le/2))
             
-            Fe(3,e) = Fe(3,e) - Me*g/2;
-            Fe(1,e) = Fe(1,e) - Me*g/2;
+            Fe(3,e) = Fe(3,e) - s.Me*s.g/2;
+            Fe(1,e) = Fe(1,e) - s.Me*s.g/2;
         
         end
     

@@ -1,69 +1,71 @@
 classdef TestComputer < handle
 
-[KG,Fext,u,tolerance] = main_function(s);
-
-properties (Access = public)
-KG
-Fext
-u
-tolerance
-end
-
-methods (Access = public)
-    function obj = TestComputer(cParams)
+    properties (Access = public)
+        KG
+        Fext
+        u
+        tolerance
+        desiredTest
     end
 
-    function [loadedData, actualData] = testSelector(obj)
-        switch obj.desiredTest
-        case{'StiffnessMatrix'}
-            obj.actualData = obj.KG;
-            stiffnessMatrixTest(obj);
-        case{'ForceVector'}
-            obj.actualData = obj.Fext;
-            forceVectorTest(obj);
-        case{'Displacements'}
-            obj.actualData = u;
-            displacementsTest(obj);
-        otherwise
-            error('Invalid solver type')
-    end
+    methods (Static, Access = public)
 
-end
-
-methods (Access = protected)
-    function result(obj)
-        switch pass
-            case{1}
-                fprintf(obj.desiredTest); fprintf('test passed \n');
-            case{0}
-                fprintf(obj.desiredTest); fprintf('test failed \n');
+        function obj = testSelector(cParams)
+            switch cParams.desiredTest
+                case{'StiffnessMatrix'}
+                    obj = StiffnessMatrixTest(cParams);
+                case{'ForceVector'}
+                    obj = ForceVectorTest(cParams);
+                case{'Displacements'}
+                    obj = DisplacementsTest(cParams);
+                otherwise
+                    error('Invalid test type')
+            end
         end
     end
 
-    function init(obj,cParams)
-        obj.KG = cParams.KG;
-        obj.Fext = cParams.Fext;
-        obj.u = cParams.u;
-        obj.tolerance = cParams.tolerance;
-    end
-end
-
-methods (Access = private)
-    function pass = check(obj)
-        maxDifference = obj.computeMaxDifference();
-        if maxDifference > tolerance
-            pass = 0;
-        else
-            pass = 1;
+    methods (Access = public)
+        function check(obj)
+            maxDifference = obj.computeMaxDifference();
+            if maxDifference > obj.tolerance
+                pass = 0;
+            else
+                pass = 1;
+            end
+            obj.result(pass);
         end
     end
 
-    function maxDifference = computeMaxDifference(obj)
-        difference = obj.computeDifference();
-        maxDifference = max(max(difference));
+    methods (Access = protected)
+        function result(obj,pass)
+            switch pass
+                case{1}
+                    fprintf(obj.desiredTest); fprintf(' test passed \n');
+                case{0}
+                    fprintf(obj.desiredTest); fprintf(' test failed \n');
+            end
+        end
+
+        function init(obj,cParams)
+            [KG,Fext,u] = mainFunction(cParams);
+            obj.KG = KG;
+            obj.Fext = Fext;
+            obj.u = u;
+        end
+        function initParams(obj,cParams)
+            obj.tolerance = cParams.tolerance;
+            obj.desiredTest = cParams.desiredTest;
+        end
     end
 
-    function difference = computeDifference(obj)
-        difference = abs(obj.actualData - obj.loadedData);
+    methods (Access = private)
+        function maxDifference = computeMaxDifference(obj)
+            difference = obj.computeDifference();
+            maxDifference = max(max(difference));
+        end
+
+        function difference = computeDifference(obj)
+            difference = abs(obj.actualData - obj.loadedData);
+        end
     end
 end
