@@ -11,21 +11,111 @@ clc;
 
 %% INPUT DATA
 
-s.tolerance = 1e-06;
-s.g = 9.81;           % m/s^2
+g = 9.81;           % m/s^2
 
-% BEAM GEOMETRY
-s.b = 100e-3;         % m
-s.a = 10e-3;          % m
-s.h = 500e-3;         % m
-s.t = 5e-3;           % m
+% BEAM GEOMETRY:
 
-s.L = 36;             % m
-s.L1 = 4;             % m
-s.L2 = 12;            % m
-s.M = 55000;          % kg
-s.Me = 3000;          % kg
-s.E = 45e9;           % Pa
+% BEAM A
+d = 150e-3;
+r = d/2;
+t_a = 8e-3;
+
+% BEAM B
+b = 50e-3;         % m
+h = 70e-3;          % m
+t_b = 5e-3;         % m
+
+L = 0.65;            % m
+H1 = 1.9;            % m
+H2 = 2.6;            % m
+r_w = 0.25;          % m
+alpha = 7*pi/180;    % rad
+E = 180e9;           % Pa
+v = 260/3.6;         % m/s
+Io = 180;            % kg m^2
+t_f = 2.5;           % s
+fr_coeff = 0.45;
+
+%% INERTIA
+% mass center and inertia
+
+% Inertia Beam A
+
+I_xa = (1/4)*pi*((r + t_a/2)^4 - (r - t_a/2)^4);
+I_ya = I_xa;
+
+Aa = pi*(r + t_a/2)^2 - pi*(r - t_a/2)^2;
+
+% Intertia Beam B
+
+beamDiv = [ % [xg_local, yg_local, surface element, surface element]
+    0, -h/2, b, t_b;
+    0, 0, h, t_b;
+    0, h/2, b, t_b;
+];
+
+elem_dim = [        % [b, h]
+   b, t_b;
+   t_b, h;
+   b, t_b;
+];
+
+N = size(beamDiv,1); % number of cross-section elements
+
+[x_cdm,y_cdm,I_xb,I_yb,Ab] = inertia(beamDiv,elem_dim,N);
+
+%% FORCES
+
+[Ny,Nx,frx,fry,N,fr] = comp_forces(v,alpha,Io,r_w,t_f,fr_coeff);
+
+
+%% SOLVER
+
+s.data.x_nod = [
+    0,      H2;
+    0, H2 - H1;
+    0,       0;
+    L,      H2;
+];
+
+s.data.Tn = [
+    1, 2;
+    2, 3;
+    4, 2;
+];
+
+s.data.Tmat = [
+    2; 2; 1;
+];
+
+s.data.fixNod = [% Node, DOF, Magnitude;
+     
+          1, 1, 0;
+          1, 2, 0;
+          1, 3, 0;
+          4, 1, 0;
+          4, 2, 0;
+          4, 3, 0;
+];
+
+s.data.fdata = [
+    3, 2, Ny + fry;
+    3, 1, Nx - frx;
+];
+
+% Material data
+s.data.mat = [% Young M.    Area       Inertia z    Inertia x
+           E,         Aa,        I_xa,        I_ya;  % Material properties
+           E,         Ab,        I_xb,        I_yb;
+      ];
+
+% Dimensions
+s.dim.nd = 3;                         % Number of dimensions
+s.dim.ni = s.dim.nd;                  % Number of DOFs for each node
+s.dim.nnod = size(s.data.x_nod,1);    % Number of nodes for each element
+s.dim.nel = size(s.data.Tn,1);        % Total number of elements
+s.dim.nne = size(s.data.Tn,2);        % Number of nodes in each bar
+s.dim.ndof = s.dim.ni*s.dim.nnod;     % Total number of degrees of freedom
 
 s.tolerance = 1e-06;
 s.desiredTest = 'StiffnessMatrix';
@@ -33,132 +123,3 @@ s.desiredTest = 'StiffnessMatrix';
 %s.desiredTest = 'Displacements';
 Test = TestComputer.testSelector(s);
 Test.check();
-
-%{
-%% PREVIOUS CALCULATIONS
-
-% mass center and inertia
-beamDiv = [ % [xg_local, yg_local, surface element, surface element]
-    0, -h/2, b, t;
-    0,    0, h, a;
-    0,  h/2, b, t;
-];
-
-elem_dim = [        % [base, height] x-direction
-   b, t;
-   a, h;
-   b, t;
-];
-
-N = size(beamDiv,1); % number of section elements
-
-[x_cdm,y_cdm,Ixx,Iyy] = inertia(beamDiv,elem_dim,N);
-
-% l parameter
-l = l_parameter(L,L1,M,Me,g);
-
-% Open figure window
-%fig = plotBeams(L);
-
-%% SOLVER
-
-%N_discr = [9, 18, 36, 72, 144, 288]';  % number of discretizations
-N_discr = 9;
-
-for p = 1:length(N_discr)
-    
-dist = (L/2)/(N_discr(p,1));
-x_nod = zeros(N_discr(p,1) + 1 ,1);
-
-    for i = 1:(N_discr(p,1) + 1)
-
-        if i == 1
-        x_nod(i,1) = 0;
-
-        else
-        x_nod(i,1) = dist*(i-1);
-    
-        end
-    end
-
-fixNod = [% Node, DOF, Magnitude;
-          % Write the data here...
-          1, 1, 0;
-          1, 2, 0;    
-];
-
-Tmat = [ones(1, (N_discr(p,1) +1))]';
-
-% Material data
-mat = [% Young M.   Inertia x    Inertia y
-           E,         Ixx,        Iyy;  % Material properties
-      ];
-  
-%% SOLVER
-
-% nodal conectivity matrix
-    for j = 1:(N_discr(p,1))
-    
-         Tn(j,1) = j;
-         Tn(j,2) = j + 1;
-      
-    end
-
-% Dimensions
-dim.nd = 2;                         % Number of dimensions
-dim.ni = dim.nd;                    % Number of DOFs for each node
-dim.nnod = size(x_nod,1);           % Number of nodes for each element
-dim.nel = size(Tn,1);               % Total number of elements
-dim.nne = size(Tn,2);               % Number of nodes in each bar
-dim.ndof = dim.ni*dim.nnod;         % Total number of degrees of freedom
-
-
-% Computation of the DOFs connectivities
-Td = connectDOF(dim,Tn);
-
-% Computation of element stiffness matrices
-Kel = stiffnessBars(dim,x_nod,Tn,mat,Tmat);
-
-% Elemet force vector
-Fe = Fext_vector(dim,x_nod,Tn,L1,L2,l,g,Me,M,L);
-
-% Global matrix assembly
-
-load('stiffMatrix.mat','KG','Fext');
-KG_old = KG;
-Fext_old = Fext;
-
-[KG,Fext] = assemblyKG(dim,Td,Kel,Fe);
-% save('stiffMatrix','KG','Fext');
-[KG] = stiffnessMatrixTest(KG,KG_old,delta);
-[Fext] = forceVectorTest(Fext,Fext_old,delta);
-
-
-% Global system of equations
-load('displacements.mat','u');
-u_old = u;
-
-[u,R,vl,vr,ur] = solveSystem(dim,KG,Fext,fixNod);
-[u] = displacementsTest(u,u_old,delta);
-% save('displacements','u');
-
-% Inertial forces Bennding moment
-[Fy,Mz,Puy,Ptz] = shear_bend(dim,x_nod,Tn,Td,Kel,u);
-%{
-%% PLOT RESULTS
-
-N_elem = N_discr(p,1);
-
-[max_displ,max_bend,u_e] = plotBeam1D(x_nod,Puy,Ptz,Fy,Mz,Tn,N_elem,fig);
-
-max_u(p,1) = max_displ;
-max_Mz(p,1) = max_bend;
-end
-
-figure(fig)
-legend(strcat('N=',cellstr(string(N_discr))),'location','northeast');
-
-plotMax_U_Mz(max_u,max_Mz,N_discr);
-%}
-end
-%}
