@@ -7,7 +7,7 @@ classdef StiffnessMatrixTest < TestComputer
 
     methods (Access = private)
         function loadData(obj)
-            load('stiffMatrix.mat','KG');
+            load('stiffnessMatrixData.mat','KG');
             obj.loadedData = KG;
         end
         function storeActualData(obj)

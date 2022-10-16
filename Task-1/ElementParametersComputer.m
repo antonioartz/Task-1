@@ -34,10 +34,6 @@ classdef ElementParametersComputer < handle
             x1 = obj.x1; x2 = obj.x2;
             y1 = obj.y1; y2 = obj.y2;
         end
-
-        function [E, A, Iz] = computeMaterialData(obj)
-            E  = obj.E;   A  = obj.A;     Iz = obj.Iz;
-        end
     end
 
     methods (Access = protected)
@@ -49,7 +45,7 @@ classdef ElementParametersComputer < handle
     methods (Access = private)
         function length = computeElementLenght(obj)
             [x1, x2, y1, y2] = obj.computeNodeCoordinates();
-            length = sqrt((x1 - x2)^2 - (y1 - y2)^2);
+            length = sqrt((x1 - x2)^2 + (y1 - y2)^2);
         end
     end
 

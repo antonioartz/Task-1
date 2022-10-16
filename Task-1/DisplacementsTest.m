@@ -7,7 +7,7 @@ classdef DisplacementsTest < TestComputer
 
     methods (Access = private)
         function loadData(obj)
-            load('displacements.mat','u');
+            load('displacementsData.mat','u');
             obj.loadedData = u;
         end
         function storeActualData(obj)

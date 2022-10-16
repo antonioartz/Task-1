@@ -7,7 +7,7 @@ classdef ForceVectorTest < TestComputer
 
     methods (Access = private)
         function loadData(obj)
-            load('stiffMatrix.mat','Fext');
+            load('stiffnessMatrixData.mat','Fext');
             obj.loadedData = Fext;
         end
         function storeActualData(obj)

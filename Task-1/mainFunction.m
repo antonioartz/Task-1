@@ -1,4 +1,4 @@
-function [KG,Fext,u] = mainFunction(s)
+function KG = mainFunction(s)       % [KG,Fext,u]
 
     % Computation of the DOFs connectivities
     Td = connectDOF(s);
@@ -7,6 +7,7 @@ function [KG,Fext,u] = mainFunction(s)
     StiffnessMatrix.computeStiffnessMatrix();
     KG = StiffnessMatrix.KG;
 
+    %{
     % Elemet force vector
     Fe = Fext_vector(dim,data.x_nod,data.Tn,s,l);
 
@@ -15,5 +16,6 @@ function [KG,Fext,u] = mainFunction(s)
 
     % Global system of equations
     [u,R,vl,vr,ur] = solveSystem(dim,KG,Fext,fixNod);
+    %}
 
 end
