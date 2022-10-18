@@ -1,19 +1,21 @@
-function KG = mainFunction(s)       % [KG,Fext,u]
+function [KGlobal, Fe] = mainFunction(s)       % [KG,Fext,u]
 
     % Computation of the DOFs connectivities
     Td = connectDOF(s);
     s.data.Td = Td;
+
+    % Global Stiffness Matrix
     StiffnessMatrix = StiffnessMatrixComputer(s);
     StiffnessMatrix.computeStiffnessMatrix();
-    KG = StiffnessMatrix.KG;
+    KGlobal = StiffnessMatrix.KG;
 
+
+    % Global force vector
+    ForceVector = ForceVectorComputer(s);
+    ForceVector.computeForceVector();
+    Fe = ForceVector.Fext;
+   
     %{
-    % Elemet force vector
-    Fe = Fext_vector(dim,data.x_nod,data.Tn,s,l);
-
-    % Global matrix assembly
-    [KG,Fext] = assemblyKG(dim,Td,Kel,Fe);
-
     % Global system of equations
     [u,R,vl,vr,ur] = solveSystem(dim,KG,Fext,fixNod);
     %}

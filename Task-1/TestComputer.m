@@ -4,6 +4,10 @@ classdef TestComputer < handle
         KG
         Fext
         u
+    end
+    properties (Access = private)
+        actualData
+        loadedData        
         tolerance
         desiredTest
     end
@@ -47,9 +51,9 @@ classdef TestComputer < handle
         end
 
         function init(obj,cParams)
-            KG = mainFunction(cParams);   % [KG,Fext,u]
-            obj.KG = KG;
-            %obj.Fext = Fext;
+            [KGlobal ,Fe]= mainFunction(cParams);   % [KG,Fext,u]
+            obj.KG = KGlobal;
+            obj.Fext = Fe;
             %obj.u = u;
         end
         function initParams(obj,cParams)

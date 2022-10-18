@@ -13,7 +13,7 @@ classdef ElementStiffnessMatrixComputer < handle
             obj.init(cParams);
         end
 
-        function obj = computeElementStiffnessMatrix(obj)
+        function computeElementStiffnessMatrix(obj)
             le = obj.params.length;
             E = obj.params.E;
             A = obj.params.A;
