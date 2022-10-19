@@ -118,8 +118,8 @@ s.dim.nne = size(s.data.Tn,2);        % Number of nodes in each bar
 s.dim.ndof = s.dim.ni*s.dim.nnod;     % Total number of degrees of freedom
 
 s.tolerance = 1e-06;
-s.desiredTest = 'StiffnessMatrix';
+%s.desiredTest = 'StiffnessMatrix';
 %s.desiredTest = 'ForceVector';
-%s.desiredTest = 'Displacements';
+s.desiredTest = 'Displacements';
 Test = TestComputer.testSelector(s);
 Test.check();

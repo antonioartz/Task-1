@@ -1,4 +1,4 @@
-function [KGlobal, Fe] = mainFunction(s)       % [KG,Fext,u]
+function [KGlobal, Fe, displacements] = mainFunction(s)  
 
     % Computation of the DOFs connectivities
     Td = connectDOF(s);
@@ -15,9 +15,9 @@ function [KGlobal, Fe] = mainFunction(s)       % [KG,Fext,u]
     ForceVector.computeForceVector();
     Fe = ForceVector.Fext;
    
-    %{
-    % Global system of equations
-    [u,R,vl,vr,ur] = solveSystem(dim,KG,Fext,fixNod);
-    %}
+    s.KGlobal = KGlobal; s.Fe = Fe;
+    Displacements = DisplacementsComputer(s);
+    Displacements.computeDisplacements();
+    displacements = Displacements.u;
 
 end

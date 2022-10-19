@@ -51,10 +51,10 @@ classdef TestComputer < handle
         end
 
         function init(obj,cParams)
-            [KGlobal ,Fe]= mainFunction(cParams);   % [KG,Fext,u]
+            [KGlobal ,Fe, displacements]= mainFunction(cParams);
             obj.KG = KGlobal;
             obj.Fext = Fe;
-            %obj.u = u;
+            obj.u = displacements;
         end
         function initParams(obj,cParams)
             obj.tolerance = cParams.tolerance;

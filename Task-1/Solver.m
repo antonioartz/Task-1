@@ -11,7 +11,7 @@ classdef Solver < handle
     methods (Static, Access = public)
         function obj = create(cParams)
 
-            switch cParams.solver_type
+            switch cParams.solverType
             case {'Direct'}
                 obj = DirectSolver(cParams);
 
