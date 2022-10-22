@@ -2,10 +2,10 @@ classdef StiffnessMatrixComputer < handle
 
     properties (Access = public)
         KG
-    end
-    properties (Access = private)
         dim
         data
+    end
+    properties (Access = private)
         KElement
     end
 
@@ -14,33 +14,22 @@ classdef StiffnessMatrixComputer < handle
             obj.init(cParams);
         end
 
-        function computeStiffnessMatrix(obj)
+        function compute(obj)
             obj.computeElementStiffness();
             obj.assembleStiffnessMatrix();
         end
     end
 
-    methods (Access = protected)
+    methods (Access = private)
         function init(obj, cParams)
             obj.dim = cParams.dim;
             obj.data = cParams.data;
         end
-    end
 
-    methods (Access = private)
         function computeElementStiffness(obj)
-            nel = obj.dim.nel;
-            nne = obj.dim.nne;
-            ni = obj.dim.ni;
-            KElem = zeros(nne*ni,nne*ni,nel);
-            for e = 1:nel
-                element = obj.loadElementParameters(e);
-                Re = obj.loadRotationMatrix(element);
-                KBase = obj.loadElementStiffnessMatrix(element);
-                KE = transpose(Re)*KBase*Re;
-                KElem(:,:,e) = KE;
-            end
-       obj.KElement = KElem;
+            ElementK = ElementStiffnessMatrixComputer(obj);
+            ElementK.compute();
+            obj.KElement = ElementK.KElement;
         end
 
         function assembleStiffnessMatrix(obj)
@@ -62,27 +51,5 @@ classdef StiffnessMatrixComputer < handle
             end
             obj.KG = KGlobal;
         end
-
-        function element = loadElementParameters(obj,e)
-            s.data = obj.data;
-            element = ElementParametersComputer(s);
-            element.elementProperties(e);
-        end
     end
-    methods (Access = private, Static)
-        function Re = loadRotationMatrix(element)
-            s = element;
-            RM = RotationMatrixComputer(s);
-            RM.computeRotationMatrix();
-            Re = RM.rotationMatrix;
-        end
-
-        function KBase = loadElementStiffnessMatrix(element)
-            s.element = element;
-            Kel = ElementStiffnessMatrixComputer(s);
-            Kel.computeElementStiffnessMatrix();
-            KBase = Kel.KE;
-        end
-    end
-
 end

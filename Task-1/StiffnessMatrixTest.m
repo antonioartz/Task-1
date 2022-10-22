@@ -1,10 +1,5 @@
 classdef StiffnessMatrixTest < TestComputer
 
-    properties (Access = public)
-        loadedData
-        actualData
-    end
-
     methods (Access = private)
         function loadData(obj)
             load('stiffnessMatrixData.mat','KG');

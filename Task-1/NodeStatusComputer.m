@@ -10,7 +10,6 @@ classdef NodeStatusComputer < handle
     end
 
     methods (Access = public)
-        
         function obj = NodeStatusComputer(cParams)
             obj.init(cParams);
         end

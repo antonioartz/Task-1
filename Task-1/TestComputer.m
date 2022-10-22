@@ -5,11 +5,13 @@ classdef TestComputer < handle
         Fext
         u
     end
-    properties (Access = private)
-        actualData
-        loadedData        
+    properties (Access = private)  
         tolerance
         desiredTest
+    end
+    properties (Access = protected)
+        actualData
+        loadedData 
     end
 
     methods (Static, Access = public)

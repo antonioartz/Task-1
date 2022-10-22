@@ -6,7 +6,7 @@
 %-----------------------------------%
 
 close all;
-clear;
+clear all;
 clc;
 
 %% INPUT DATA
@@ -121,5 +121,7 @@ s.tolerance = 1e-06;
 %s.desiredTest = 'StiffnessMatrix';
 %s.desiredTest = 'ForceVector';
 s.desiredTest = 'Displacements';
+s.solverType = 'Direct';
+%s.solverType = 'Iterative';
 Test = TestComputer.testSelector(s);
 Test.check();

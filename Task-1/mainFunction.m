@@ -6,18 +6,18 @@ function [KGlobal, Fe, displacements] = mainFunction(s)
 
     % Global Stiffness Matrix
     StiffnessMatrix = StiffnessMatrixComputer(s);
-    StiffnessMatrix.computeStiffnessMatrix();
+    StiffnessMatrix.compute();
     KGlobal = StiffnessMatrix.KG;
 
 
     % Global force vector
     ForceVector = ForceVectorComputer(s);
-    ForceVector.computeForceVector();
+    ForceVector.compute();
     Fe = ForceVector.Fext;
    
     s.KGlobal = KGlobal; s.Fe = Fe;
     Displacements = DisplacementsComputer(s);
-    Displacements.computeDisplacements();
+    Displacements.compute();
     displacements = Displacements.u;
 
 end

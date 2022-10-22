@@ -6,6 +6,7 @@ classdef Solver < handle
     properties (Access = protected)
         LHS
         RHS
+        solverType
     end
 
     methods (Static, Access = public)
@@ -28,6 +29,7 @@ classdef Solver < handle
         function init(obj,cParams)
             obj.LHS = cParams.LHS;
             obj.RHS = cParams.RHS;
+            obj.solverType = cParams.solverType;
         end
     end
 end

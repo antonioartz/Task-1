@@ -14,7 +14,7 @@ classdef ForceVectorComputer < handle
                 obj.init(cParams);
             end
 
-            function computeForceVector(obj)
+            function compute(obj)
                 forceData = obj.fdata;
                 ndof = obj.dim.ndof;
                 ni = obj.dim.ni;
@@ -26,7 +26,7 @@ classdef ForceVectorComputer < handle
             end
         end
         
-        methods (Access = protected)
+        methods (Access = private)
             function init(obj,cParams)
                 obj.dim = cParams.dim;
                 obj.fdata = cParams.data.fdata;

@@ -1,10 +1,5 @@
 classdef DisplacementsTest < TestComputer
 
-    properties (Access = public)
-        loadedData
-        actualData
-    end
-
     methods (Access = private)
         function loadData(obj)
             load('displacementsData.mat','u');

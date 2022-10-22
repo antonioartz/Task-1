@@ -2,16 +2,18 @@ classdef DisplacementsComputer < handle
 
     properties (Access = public)
         u
-        fixedNodes
         dim
+        fixedNodes
+        KLL, KLR, FL
+        KG
+        Fext
+        vl, vr
+        ul, ur
+        solverType
     end
 
     properties (Access = private)
-        solverType
-        vl, vr
-        ul, ur
-        KG
-        Fext
+
     end
  
     methods (Access = public)
@@ -19,7 +21,7 @@ classdef DisplacementsComputer < handle
             obj.init(cParams)
         end
 
-        function computeDisplacements(obj)
+        function compute(obj)
             obj.loadNodeStatus();
             obj.computeFixedDisplacements();
             obj.computeFreeDisplacements();
@@ -31,7 +33,7 @@ classdef DisplacementsComputer < handle
         function init(obj,cParams)
             obj.KG = cParams.KGlobal;
             obj.Fext = cParams.Fe;
-%            obj.solverType = cParams.solverType;
+            obj.solverType = cParams.solverType;
             obj.fixedNodes = cParams.data.fixNod;
             obj.dim = cParams.dim;
         end
@@ -49,24 +51,15 @@ classdef DisplacementsComputer < handle
         end
 
         function computeFreeDisplacements(obj)
-            KGlobal = obj.KG; Fe = obj.Fext;
-            free = obj.vl; fixed = obj.vr;
-            KLL = KGlobal(free,free);
-            KLR = KGlobal(free,fixed);
-            KRL = KGlobal(fixed,free);
-            KRR = KGlobal(fixed,fixed);
-            FL = Fe(free,1);
-            FR = Fe(fixed,1);
-        
-            s.LHS = KLL;
-            s.RHS = FL - KLR*obj.ur;
-        
-            s.solverType = 'Direct';
-            %s.solverType = 'Iterative';
-        
-            Solv = Solver.create(s);
-            Solv.solve();
-            obj.ul = Solv.x;
+            DecomposeKG = StiffnessMatrixDecomposer(obj);   
+            DecomposeKG.decompose();
+            obj.KLL = DecomposeKG.KLL;
+            obj.KLR = DecomposeKG.KLR;
+            obj.FL = DecomposeKG.FL; 
+            
+            FreeDisp = FreeDisplacementsSolver(obj);
+            FreeDisp.compute();
+            obj.ul = FreeDisp.ul;
         end
 
         function assembleDisplacements(obj)

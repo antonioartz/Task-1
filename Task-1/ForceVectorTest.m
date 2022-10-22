@@ -1,10 +1,5 @@
 classdef ForceVectorTest < TestComputer
 
-    properties (Access = public)
-        loadedData
-        actualData
-    end
-
     methods (Access = private)
         function loadData(obj)
             load('stiffnessMatrixData.mat','Fext');
