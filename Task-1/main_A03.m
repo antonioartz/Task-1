@@ -28,13 +28,13 @@ t_b = 5e-3;         % m
 L = 0.65;            % m
 H1 = 1.9;            % m
 H2 = 2.6;            % m
-r_w = 0.25;          % m
-alpha = 7*pi/180;    % rad
+f.r_w = 0.25;          % m
+f.alpha = 7*pi/180;    % rad
 E = 180e9;           % Pa
-v = 260/3.6;         % m/s
-Io = 180;            % kg m^2
-t_f = 2.5;           % s
-fr_coeff = 0.45;
+f.v = 260/3.6;         % m/s
+f.Io = 180;            % kg m^2
+f.t_f = 2.5;           % s
+f.fr_coeff = 0.45;
 
 %% INERTIA
 % mass center and inertia
@@ -48,26 +48,38 @@ Aa = pi*(r + t_a/2)^2 - pi*(r - t_a/2)^2;
 
 % Intertia Beam B
 
-beamDiv = [ % [xg_local, yg_local, surface element, surface element]
+c.beamDiv = [ % [xg_local, yg_local, surface element, surface element]
     0, -h/2, b, t_b;
     0, 0, h, t_b;
     0, h/2, b, t_b;
 ];
 
-elem_dim = [        % [b, h]
+c.elem_dim = [        % [b, h]
    b, t_b;
    t_b, h;
    b, t_b;
 ];
 
-N = size(beamDiv,1); % number of cross-section elements
+c.N = size(c.beamDiv,1); % number of cross-section elements
 
-[x_cdm,y_cdm,I_xb,I_yb,Ab] = inertia(beamDiv,elem_dim,N);
+inertia = InertiaComputer(c);
+inertia.compute();
+x_cdm = inertia.x_cdm;
+y_cdm = inertia.y_cdm;
+I_xb = inertia.Ixb;
+I_yb = inertia.Iyb;
+Ab = inertia.Ab;
 
 %% FORCES
 
-[Ny,Nx,frx,fry,N,fr] = comp_forces(v,alpha,Io,r_w,t_f,fr_coeff);
-
+initForces = InitialForcesComputer(f);
+initForces.compute();
+Ny = initForces.Ny;
+Nx = initForces.Nx;
+frx = initForces.frx;
+fry = initForces.fry;
+N = initForces.N;
+fr = initForces.fr;
 
 %% SOLVER
 

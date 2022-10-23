@@ -1,8 +1,9 @@
 function [KGlobal, Fe, displacements] = mainFunction(s)  
 
     % Computation of the DOFs connectivities
-    Td = connectDOF(s);
-    s.data.Td = Td;
+    connect = ConnectDOFComputer(s);
+    connect.compute();
+    s.data.Td = connect.Td;
 
     % Global Stiffness Matrix
     StiffnessMatrix = StiffnessMatrixComputer(s);
