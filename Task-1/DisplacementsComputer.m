@@ -11,10 +11,6 @@ classdef DisplacementsComputer < handle
         ul, ur
         solverType
     end
-
-    properties (Access = private)
-
-    end
  
     methods (Access = public)
         function obj = DisplacementsComputer(cParams)
@@ -31,8 +27,8 @@ classdef DisplacementsComputer < handle
 
     methods (Access = private)
         function init(obj,cParams)
-            obj.KG = cParams.KGlobal;
-            obj.Fext = cParams.Fe;
+            obj.KG = cParams.KG;
+            obj.Fext = cParams.Fext;
             obj.solverType = cParams.solverType;
             obj.fixedNodes = cParams.data.fixNod;
             obj.dim = cParams.dim;

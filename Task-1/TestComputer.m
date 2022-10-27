@@ -53,10 +53,11 @@ classdef TestComputer < handle
         end
 
         function init(obj,cParams)
-            [KGlobal ,Fe, displacements]= mainFunction(cParams);
-            obj.KG = KGlobal;
-            obj.Fext = Fe;
-            obj.u = displacements;
+            solveFEM = FEMComputer(cParams);
+            solveFEM.compute();
+            obj.KG = solveFEM.KG;
+            obj.Fext = solveFEM.Fext;
+            obj.u = solveFEM.u;
         end
         function initParams(obj,cParams)
             obj.tolerance = cParams.tolerance;
