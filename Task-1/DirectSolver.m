@@ -5,8 +5,6 @@ classdef DirectSolver < Solver
             %obj.x = obj.LHS\obj.RHS;
             obj.x = inv(obj.LHS)*obj.RHS;
         end
-    end
-    methods(Access = public)
         function obj = DirectSolver(cParams)
             obj.init(cParams);
         end

@@ -131,8 +131,8 @@ s.dim.ndof = s.dim.ni*s.dim.nnod;     % Total number of degrees of freedom
 
 s.tolerance = 1e-06;
 %s.desiredTest = 'StiffnessMatrix';
-%s.desiredTest = 'ForceVector';
-s.desiredTest = 'Displacements';
+s.desiredTest = 'ForceVector';
+%s.desiredTest = 'Displacements';
 s.solverType = 'Direct';
 %s.solverType = 'Iterative';
 Test = TestComputer.testSelector(s);

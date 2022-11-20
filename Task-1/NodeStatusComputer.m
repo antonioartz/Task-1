@@ -13,8 +13,18 @@ classdef NodeStatusComputer < handle
         function obj = NodeStatusComputer(cParams)
             obj.init(cParams);
         end
-        
-        function computeNodeStatus(obj)
+        function compute(obj)
+            obj.computeNodeStatus();
+        end
+    end
+    
+
+    methods (Access = private)
+        function init(obj,cParams)
+            obj.fixedNodes = cParams.fixedNodes;
+            obj.dim = cParams.dim;
+        end
+                function computeNodeStatus(obj)
             ndof = obj.dim.ndof;
             ni = obj.dim.ni;
             fixNod = obj.fixedNodes;
@@ -28,14 +38,6 @@ classdef NodeStatusComputer < handle
 
             obj.vr = free;
             obj.vl = fixed;
-        end
-    end
-    
-
-    methods (Access = private)
-        function init(obj,cParams)
-            obj.fixedNodes = cParams.fixedNodes;
-            obj.dim = cParams.dim;
         end
     end
 end

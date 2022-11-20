@@ -33,7 +33,7 @@ classdef ElementParametersComputer < handle
             node2 = obj.data.Tn(e,2);
             obj.x1 = X(node1,1); obj.x2 = X(node2,1);
             obj.y1 = X(node1,2); obj.y2 = X(node2,2);
-            obj.length = obj.computeElementLenght();
+            obj.computeElementLenght();
         end
         function elementMaterial(obj,e)
             Mat = obj.data.mat;
@@ -42,10 +42,10 @@ classdef ElementParametersComputer < handle
             obj.A = Mat(Tmat,2);
             obj.Iz = Mat(Tmat,3);            
         end
-        function length = computeElementLenght(obj)
+        function computeElementLenght(obj)
             X1 = obj.x1; X2 = obj.x2;
             Y1 = obj.y1; Y2 = obj.y2;
-            length = sqrt((X1 - X2)^2 + (Y1 - Y2)^2);
+            obj.length = sqrt((X1 - X2)^2 + (Y1 - Y2)^2);
         end
     end
 

@@ -36,7 +36,7 @@ classdef DisplacementsComputer < handle
 
         function loadNodeStatus(obj)
             Nodes = NodeStatusComputer(obj);
-            Nodes.computeNodeStatus();
+            Nodes.compute();
             obj.vl = Nodes.vl;
             obj.vr = Nodes.vr;
         end
