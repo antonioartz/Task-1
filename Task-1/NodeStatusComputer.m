@@ -24,7 +24,7 @@ classdef NodeStatusComputer < handle
             obj.fixedNodes = cParams.fixedNodes;
             obj.dim = cParams.dim;
         end
-                function computeNodeStatus(obj)
+        function computeNodeStatus(obj)
             ndof = obj.dim.ndof;
             ni = obj.dim.ni;
             fixNod = obj.fixedNodes;

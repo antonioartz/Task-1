@@ -5,8 +5,6 @@ classdef DisplacementsComputer < handle
         dim
         fixedNodes
         KLL, KLR, FL
-        KG
-        Fext
         vl, vr
         ul, ur
         solverType
@@ -18,7 +16,6 @@ classdef DisplacementsComputer < handle
         end
 
         function compute(obj)
-            obj.loadNodeStatus();
             obj.computeFixedDisplacements();
             obj.computeFreeDisplacements();
             obj.assembleDisplacements();
@@ -27,18 +24,14 @@ classdef DisplacementsComputer < handle
 
     methods (Access = private)
         function init(obj,cParams)
-            obj.KG = cParams.KG;
-            obj.Fext = cParams.Fext;
             obj.solverType = cParams.solverType;
             obj.fixedNodes = cParams.data.fixNod;
             obj.dim = cParams.dim;
-        end
-
-        function loadNodeStatus(obj)
-            Nodes = NodeStatusComputer(obj);
-            Nodes.compute();
-            obj.vl = Nodes.vl;
-            obj.vr = Nodes.vr;
+            obj.KLL = cParams.KLL;
+            obj.KLR = cParams.KLR;
+            obj.FL = cParams.FL;
+            obj.vl = cParams.vl;
+            obj.vr = cParams.vr;
         end
 
         function computeFixedDisplacements(obj)
@@ -46,13 +39,7 @@ classdef DisplacementsComputer < handle
             obj.ur(:,1) = fixNod(:,3);
         end
 
-        function computeFreeDisplacements(obj)
-            DecomposeKG = StiffnessMatrixDecomposer(obj);   
-            DecomposeKG.decompose();
-            obj.KLL = DecomposeKG.KLL;
-            obj.KLR = DecomposeKG.KLR;
-            obj.FL = DecomposeKG.FL; 
-            
+        function computeFreeDisplacements(obj)            
             FreeDisp = FreeDisplacementsSolver(obj);
             FreeDisp.compute();
             obj.ul = FreeDisp.ul;

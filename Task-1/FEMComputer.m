@@ -7,6 +7,11 @@ classdef FEMComputer < handle
         dim
         data
         solverType
+        KLL
+        KLR
+        FL
+        vl
+        vr
     end
 
     methods (Access = public)
@@ -35,11 +40,16 @@ classdef FEMComputer < handle
             StiffnessMatrix = StiffnessMatrixComputer(obj);
             StiffnessMatrix.compute();
             obj.KG = StiffnessMatrix.KG;
+            obj.vl = StiffnessMatrix.vl;
+            obj.vr = StiffnessMatrix.vr;
+            obj.KLL = StiffnessMatrix.KLL;
+            obj.KLR = StiffnessMatrix.KLR;
         end
         function computeForceVector(obj)
             ForceVector = ForceVectorComputer(obj);
             ForceVector.compute();
             obj.Fext = ForceVector.Fext;
+            obj.FL = ForceVector.FL;
         end
         function computeDisplacements(obj)
             Displacements = DisplacementsComputer(obj);

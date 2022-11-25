@@ -4,6 +4,10 @@ classdef StiffnessMatrixComputer < handle
         KG
         dim
         data
+        vl, vr
+        KLL
+        KLR
+        fixedNodes
     end
     properties (Access = private)
         KElement
@@ -17,6 +21,8 @@ classdef StiffnessMatrixComputer < handle
         function compute(obj)
             obj.computeElementStiffness();
             obj.assembleStiffnessMatrix();
+            obj.loadNodeStatus();
+            obj.decomposeStiffnessMatrix();
         end
     end
 
@@ -24,6 +30,7 @@ classdef StiffnessMatrixComputer < handle
         function init(obj, cParams)
             obj.dim = cParams.dim;
             obj.data = cParams.data;
+            obj.fixedNodes = cParams.data.fixNod;
         end
 
         function computeElementStiffness(obj)
@@ -50,6 +57,18 @@ classdef StiffnessMatrixComputer < handle
                 end
             end
             obj.KG = KGlobal;
+        end
+        function loadNodeStatus(obj)
+            Nodes = NodeStatusComputer(obj);
+            Nodes.compute();
+            obj.vl = Nodes.vl;
+            obj.vr = Nodes.vr;
+        end
+        function decomposeStiffnessMatrix(obj)
+            DecomposeKG = StiffnessMatrixDecomposer(obj);   
+            DecomposeKG.decompose();
+            obj.KLL = DecomposeKG.KLL;
+            obj.KLR = DecomposeKG.KLR; 
         end
     end
 end
